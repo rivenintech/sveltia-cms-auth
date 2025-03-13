@@ -275,6 +275,24 @@ const handleCallback = async (request, env) => {
   return outputHTML({ provider, token, error });
 };
 
+/**
+ * Handle the `app-permissions` method, which redirects to the GitHub App permissions page.
+ * @param {Request} request - HTTP request.
+ * @param {{ [key: string]: string }} env - Environment variables.
+ * @returns {Promise<Response>} HTTP response.
+ */
+const redirectToAppPermissions = async (request, env) => {
+  const { GITHUB_HOSTNAME = 'github.com', GITHUB_APP_NAME } = env;
+  const GITHUB_APP_URL = GITHUB_APP_NAME
+    ? `https://${GITHUB_HOSTNAME}/apps/${GITHUB_APP_NAME}/installations/new`
+    : `https://${GITHUB_HOSTNAME}/settings/apps`;
+
+  return new Response('', {
+    status: 302,
+    headers: { Location: GITHUB_APP_URL },
+  });
+};
+
 export default {
   /**
    * The main request handler.
@@ -295,6 +313,10 @@ export default {
 
     if (method === 'GET' && ['/callback', '/oauth/redirect'].includes(pathname)) {
       return handleCallback(request, env);
+    }
+
+    if (method === 'GET' && ['/app-permissions'].includes(pathname)) {
+      return redirectToAppPermissions(request, env);
     }
 
     return new Response('', { status: 404 });

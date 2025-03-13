@@ -22,14 +22,16 @@ Once deployed, open your Cloudflare Workers dashboard, select the `sveltia-cms-a
 
 #### GitHub
 
-[Register a new OAuth application](https://github.com/settings/applications/new) on GitHub ([details](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app)) with the following properties, including your Worker URL from Step 1:
+[Register a new GitHub App](https://github.com/settings/apps/new) on GitHub ([details](https://docs.github.com/en/apps/creating-github-apps)) with the following properties, including your Worker URL from Step 1:
 
-- Application name: `Sveltia CMS Authenticator` (or whatever)
+- GitHub App name: `Sveltia CMS Authenticator` (or whatever)
 - Homepage URL: `https://github.com/sveltia/sveltia-cms-auth` (or whatever)
-- Application description: (can be left empty)
-- Authorization callback URL: `<YOUR_WORKER_URL>/callback`
+- Callback URL: `<YOUR_WORKER_URL>/callback`
+- Expire user authorization tokens: [By default GitHub tokens expire after 8 hours](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/token-expiration-and-revocation#user-token-expired-due-to-github-app-configuration) and you'll have to log in again. (your choice)
+- Webhook: Untick **Active**
+- Permissions: **Repository permissions** > **Contents** - `Access: Read and write`
 
-Once registered, click on the **Generate a new client secret** button. The app’s **Client ID** and **Client Secret** will be displayed. We’ll use them in Step 3 below.
+Once created, click on the **Generate a new client secret** button. The app’s **Client ID** and **Client Secret** will be displayed. Also copy the app's name from URL (`https://github.com/settings/apps/<your-app-name>`). We’ll use them in Step 3 below.
 
 #### GitLab
 
@@ -51,6 +53,7 @@ Go back to the `sveltia-cms-auth` service page on the Cloudflare dashboard, sele
 - `GITHUB_CLIENT_ID`: **Client ID** from Step 2
 - `GITHUB_CLIENT_SECRET`: **Client Secret** from Step 2; click the **Encrypt** button to hide it
 - `GITHUB_HOSTNAME`: Required only if you’re using GitHub Enterprise Server. Default: `github.com`
+- `GITHUB_APP_NAME`: The app name from URL (e.g. **sveltia-cms-authenticator**).
 
 #### GitLab
 
